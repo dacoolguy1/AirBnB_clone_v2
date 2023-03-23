@@ -73,7 +73,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if pline[0] is '{' and pline[-1] is'}'\
+                    if pline[0] is '{' and pline[-1] is '}'\
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -118,21 +118,25 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        args = arg.split() #Here we split the arguments into an individnaul list of arguments
-        class_name = args[0] #next we need to extract the class name which is the first variable
+        args = arg.split()
+        """Here we split the arguments into an individnaul list of arguments"""
+        class_name = args[0]
+        """next we need to extract the classname which is the first variable"""
         if class_name not in HBNBCommand.classes:
             print("** class doesn't exists**")
-            return # this code checks if the class corresponds to an existing class
+            return
+        # this code checks if the class corresponds to an existing class
         # now lets extract the remaining arguments and work with them
         attr = {}
         for arg in args[1:]:
             try:
                 key, value = arg.split('=')
                 if value.startswith('"') and value.endswith('"'):
-                    value = value[1:-1].replace("_",' ').replace("//",' ')
+                    value = value[1:-1].replace("_", ' ').replace("//", ' ')
                     attrs[key] = value
                 elif '.' in value:
-                    attrs[key] = float(value) # here we convert to decimal
+                    attrs[key] = float(value)
+                    # here we convert to decimal
                 else:
                     attrs[key] = int(value)
             except ValueError:
@@ -336,6 +340,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
