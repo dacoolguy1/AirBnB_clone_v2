@@ -141,7 +141,8 @@ class HBNBCommand(cmd.Cmd):
                     attrs[key] = int(value)
             except ValueError:
                 pass
-        new_instance = HBNBCommand.classes[class_name](**attrs)
+        new_instance = HBNBCommand.classes[class_name](**attrs)i
+        new_instance.save()
         storage.new(new_instance)
         storage.save()
         print(new_instance.id)
