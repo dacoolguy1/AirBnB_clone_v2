@@ -115,39 +115,42 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """ Create an object of any class"""
+        args = args.split()
+        # print(args)
         if not args:
             print("** class name missing **")
             return
-        args = arg.split()
-        """Here we split the arguments into an individnaul list of arguments"""
-        class_name = args[0]
-        """next we need to extract the classname which is the first variable"""
-        if class_name not in HBNBCommand.classes:
-            print("** class doesn't exists**")
+        elif args[0] not in HBNBCommand.classes:
+            print("** class doesn't exist **")
             return
-        # this code checks if the class corresponds to an existing class
-        # now lets extract the remaining arguments and work with them
-        attr = {}
-        for arg in args[1:]:
-            try:
-                key, value = arg.split('=')
-                if value.startswith('"') and value.endswith('"'):
-                    value = value[1:-1].replace("_", ' ').replace("//", ' ')
-                    attrs[key] = value
-                elif '.' in value:
-                    attrs[key] = float(value)
-                    # here we convert to decimal
-                else:
-                    attrs[key] = int(value)
-            except ValueError:
-                pass
-        new_instance = HBNBCommand.classes[class_name](**attrs)
-        new_instance.save()
-
+        new_instance = HBNBCommand.classes[args[0]]()
+        for i in range(1, len(args)):
+            if (args[i].count("=") == 1):
+                attribute = args[i].split('=')
+                if type(attribute[0] == str):
+                    if (attribute[1].count('"') == 2):
+                        if (attribute[1].count('_') > 0):
+                            attribute[1] = attribute[1].replace('_', ' ')
+                        # self.do_update("{} {} {} {}".format(
+                        #     new_instance.__class__.__name__,
+                        #     new_instance.id, attribute[0], attribute[1]))
+                        new_instance.__dict__.update({
+                            attribute[0]: attribute[1].strip('"')})
+                    elif (attribute[1].replace('.', '', 1).isdigit()
+                            or attribute[1].replace('.', '', 1).replace('-','', 1)):
+                        if attribute[1].isdigit():
+                            new_instance.__dict__.update({
+                                attribute[0]: int(attribute[1])})
+                        else:
+                            new_instance.__dict__.update({
+                                attribute[0]: float(attribute[1])})
+                        # self.do_update("{} {} {} {}".format(
+                        #     new_instance.__class__.__name__,
+                        #     new_instance.id, attribute[0], attribute[1]))
+                    # new_instance.__dict__.update({attribute[0]:attribute[1]})
         storage.new(new_instance)
         storage.save()
         print(new_instance.id)
-        storage.save()
 
     def help_create(self):
         """ Help information for the create method """
