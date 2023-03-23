@@ -118,10 +118,27 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
-            print("** class doesn't exist **")
-            return
-        new_instance = HBNBCommand.classes[args]()
+        args = arg.split() #Here we split the arguments into an individnaul list of arguments
+        class_name = args[0] #next we need to extract the class name which is the first variable
+        if class_name not in HBNBCommand.classes:
+            print("** class doesn't exists**")
+            return # this code checks if the class corresponds to an existing class
+        # now lets extract the remaining arguments and work with them
+        attr = {}
+        for arg in args[1:]:
+            try:
+                key, value = arg.split('=')
+                if value.startswith('"') and value.endswith('"'):
+                    value = value[1:-1].replace("_",' ').replace("//",' ')
+                    attrs[key] = value
+                elif '.' in value:
+                    attrs[key] = float(value) # here we convert to decimal
+                else:
+                    attrs[key] = int(value)
+            except ValueError:
+                pass
+        new_instance = HBNBCommand.classes[class_name](**attrs)
+        storage.new(new_instance)
         storage.save()
         print(new_instance.id)
         storage.save()
